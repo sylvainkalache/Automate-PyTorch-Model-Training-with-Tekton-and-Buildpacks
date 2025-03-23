@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: run-training-only-pipeline
+spec:
+  workspaces:
+    - name: source
+  tasks:
+    - name: run-training
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - name: train-model
+            image: sylvainkalache/automate-pytorch-model-training-with-tekton-and-buildpacks:latest
+            env:
+              - name: PYTHONPATH
+                value: "/layers/paketo-buildpacks_pip-install/packages/lib/python3.10/site-packages:$PYTHONPATH"
+              - name: LD_LIBRARY_PATH
+                value: "/layers/paketo-buildpacks_cpython/cpython/lib:$LD_LIBRARY_PATH"
+            script: |
+              #!/bin/bash
+              echo "Starting model training..."
+              cd /workspace/source
+              /layers/paketo-buildpacks_cpython/cpython/bin/python train.py
+              echo "Training completed."
+      workspaces:
+        - name: source
+          workspace: source
+

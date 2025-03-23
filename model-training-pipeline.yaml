@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: model-training-pipeline
+spec:
+  workspaces:
+    - name: source
+  tasks:
+    - name: build-image
+      taskSpec:
+        workspaces:
+          - name: source
+        params:
+          - name: APP_IMAGE
+            type: string
+            default: sylvainkalache/automate-pytorch-model-training-with-tekton-and-buildpacks:latest
+          - name: BUILDER_IMAGE
+            type: string
+            default: docker.io/paketobuildpacks/builder:full
+        steps:
+          - name: prepare
+            image: alpine:3.12
+            script: |
+              #!/bin/sh
+              echo "Preparing workspace..."
+              echo "Contents of $(workspaces.source.path):"
+              ls -la "$(workspaces.source.path)"
+          - name: create
+            image: $(params.BUILDER_IMAGE)
+            env:
+              - name: CNB_PLATFORM_API
+                value: "0.3"
+              - name: PIP_NO_ISOLATION
+                value: "1"
+            script: |
+              #!/bin/sh
+              echo "Running buildpacks creator..."
+              /cnb/lifecycle/creator -skip-restore -app "$(workspaces.source.path)" "$(params.APP_IMAGE)"
+      workspaces:
+        - name: source
+          workspace: source
+    - name: run-training
+      runAfter:
+        - build-image
+      taskSpec:
+        steps:
+          - name: train-model
+            image: sylvainkalache/automate-pytorch-model-training-with-tekton-and-buildpacks:latest
+            script: |
+              #!/bin/bash
+              echo "Starting model training..."
+              cd /workspace/source
+              /layers/paketo-buildpacks_cpython/cpython/bin/python --version
+              /layers/paketo-buildpacks_cpython/cpython/bin/python train.py
+              python3 train.py
+              echo "Training completed."
