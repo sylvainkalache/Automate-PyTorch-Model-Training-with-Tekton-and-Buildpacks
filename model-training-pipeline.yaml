@@ -23,8 +23,6 @@ spec:
             script: |
               #!/bin/sh
               echo "Preparing workspace..."
-              echo "Contents of $(workspaces.source.path):"
-              ls -la "$(workspaces.source.path)"
           - name: create
             image: $(params.BUILDER_IMAGE)
             env:
@@ -46,11 +44,18 @@ spec:
         steps:
           - name: train-model
             image: sylvainkalache/automate-pytorch-model-training-with-tekton-and-buildpacks:latest
+            env:
+              - name: LD_LIBRARY_PATH
+                value: "/layers/paketo-buildpacks_cpython/cpython/lib:$LD_LIBRARY_PATH"
+              - name: PYTHONPATH
+                value: "/layers/paketo-buildpacks_pip-install/packages/lib/python3.10/site-packages:$PYTHONPATH"
             script: |
               #!/bin/bash
               echo "Starting model training..."
               cd /workspace/source
               /layers/paketo-buildpacks_cpython/cpython/bin/python --version
               /layers/paketo-buildpacks_cpython/cpython/bin/python train.py
-              python3 train.py
               echo "Training completed."
+      workspaces:
+        - name: source
+          workspace: source
