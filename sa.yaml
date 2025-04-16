@@ -3,4 +3,4 @@ kind: ServiceAccount
 metadata:
   name: buildpacks-service-account
 secrets:
-  - name: docker-user-pass
+  - name: docker-hub-secret
