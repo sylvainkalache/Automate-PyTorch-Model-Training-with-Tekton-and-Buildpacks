@@ -10,6 +10,7 @@ spec:
   storageClassName: ""    # or "standard" if your PVC uses that
   hostPath:
     path: /mnt/training_process
+    type: Directory
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
