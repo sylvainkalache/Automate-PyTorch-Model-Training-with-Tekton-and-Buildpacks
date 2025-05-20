@@ -2,5 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: buildpacks-service-account
+imagePullSecrets:
+  - name: docker-hub-secret
 secrets:
   - name: docker-hub-secret
