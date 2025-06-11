@@ -1,11 +1,18 @@
 # 🤖 Automate PyTorch Model Training with Tekton and Paketo Buildpacks
 
-This repository demonstrates building a CI/CD pipeline to fine-tune a GPT-2 model using Tekton pipelines and Paketo Buildpacks. It leverages Buildpacks for containerization—eliminating the need to manually write and maintain Dockerfiles—and uses Tekton to orchestrate the entire build and training workflow on Kubernetes.
+This repository demonstrates building a CI/CD pipeline to fine-tune a GPT-2 model using Tekton pipelines and Paketo Buildpacks. It leverages Buildpacks for containerization, eliminating the need to manually write and maintain Dockerfiles, and utilizes Tekton to orchestrate the entire build and training workflow on Kubernetes.
+
+I wanted to build something:
+- Fully OSS
+- Cloud Native
+- No Dockerfile
+
+I documented how to use this repository in a [Towards Data Science article](https://towardsdatascience.com/automate-models-training-an-mlops-pipeline-with-tekton-and-buildpacks/).
 
 ## Why Tekton and Buildpacks?
 
 - **[Tekton Pipelines](https://tekton.dev/)** is an open-source CI/CD system native to Kubernetes, enabling reproducible and scalable workflows.
-- **[Paketo Buildpacks](https://paketo.io/)** automatically containerizes your applications by detecting runtimes and dependencies, simplifying container image creation without Dockerfiles.
+- **[Paketo Buildpacks](https://paketo.io/)** automatically containerizes your applications by detecting runtimes and dependencies, simplifying container image creation without Dockerfiles. [Incubating CNCF project](http://cncf.io/projects/buildpacks/).
 - **[GPT-2](https://github.com/openai/gpt-2)** is a lightweight language model ideal for quick demonstration purposes.
 
 ## Repository Structure
@@ -28,5 +35,4 @@ This repository demonstrates building a CI/CD pipeline to fine-tune a GPT-2 mode
 - **Consistency:** Reproducible builds and training across environments.
 - **Efficiency:** Simple maintenance and easy updates.
 
-By leveraging Tekton and Paketo Buildpacks, this pipeline streamlines ML model development and deployment, fostering rapid and reliable experimentation.
 
